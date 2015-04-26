@@ -94,7 +94,7 @@ private:
     void leftRotate(WeatherDataNode * x);
     void rightRotate(WeatherDataNode * x);
     void rbDelete(WeatherDataNode * z);
-    void rbDeleteFixup(WeatherDataNode * node);
+    void rbDeleteFixup(WeatherDataNode * x);
     void rbTransplant(WeatherDataNode * u, WeatherDataNode * v);
     int rbValid(WeatherDataNode * node);
     void printCitiesByName(WeatherDataNode * node);
