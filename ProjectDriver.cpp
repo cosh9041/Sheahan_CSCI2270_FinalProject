@@ -20,7 +20,7 @@ void weather Menu(WeatherData * ws) {
 	string cityName;
 	cin >> cityName;
 	if (ws->foundCity(cityName)) {
-	//	
+	//
 }*/
 void inputCity(string city, WeatherData * ws) {
     //Set command argument to pass to system command line to call python file that gets weather data.
@@ -39,7 +39,7 @@ void inputCity(string city, WeatherData * ws) {
         cityInfo += temp;
     }
     remove((city + ".txt").c_str());
-    if (cityInfo.length() < 600 ) 
+    if (cityInfo.length() < 600 )
 		cout << city + " not found. Please enter a valid city." << endl;
 	else ws->addCity(cityInfo);
 }
@@ -64,7 +64,7 @@ int main() {
     inputCity("Cincinnati", ws);
     inputCity("Dallas", ws);
     inputCity("Salt Lake City", ws);
-    
+
     int userArg;
     printMenu();
 
@@ -77,13 +77,17 @@ int main() {
             inputCity(city, ws);
         }
         if (userArg == 2) {
-            cout << "deleting city..." << endl;
+            cout << "Enter city name:" << endl;
+            cin.ignore();
+            string city;
+            getline(cin, city);
+            ws->deleteCity(city);
         }
         if (userArg == 3) {
 			ws->printCitiesByName();
 		}
         if (userArg == 8) {
-            cout << "Goodbye!" << endl;
+            cout << "Goodbye!~" << endl;
             break;
         }
         printMenu();
