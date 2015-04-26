@@ -270,5 +270,144 @@ void WeatherData::getAllWeatherData(string city) {
 	
 }
 
+WeatherDataNode* WeatherData::searchWeatherData(WeatherDataNode * node, string city) {
+   if(node == nil){
+       return nil;
+   }
+   else{
+        if(node->loc.cityName == city){
+            return node;
+        }
+        else{
+            if(city.compare(node->loc.cityName) < 0){
+                return searchWeatherData(node->leftChild,city);
+            }
+            else{
+                return searchWeatherData(node->rightChild,city);
+            }
+        }
+    }
+}
+
+void WeatherData::deleteCity(string city){
+   WeatherDataNode *found = searchWeatherData(root, city);
+
+   if (found == nil)
+      cout << "movie not found" << endl;
+   else {
+      rbDelete(found);
+   }
+}
+
+void WeatherData::rbDelete(WeatherDataNode * z){
+   WeatherDataNode *y = z;
+   bool origCol = y->isRed;
+   WeatherDataNode *temp;
+   if (z->leftChild == nil) {
+      temp = z->rightChild;
+      rbTransplant(z, z->rightChild);
+   }
+   else if (z->rightChild == nil) {
+      temp = z->leftChild;
+      rbTransplant(z, z->leftChild);
+   }
+   else {
+      y = y->rightChild;
+      while (y->leftChild != nil) {
+         y = y->leftChild;
+      }
+      origCol = y->isRed;
+      temp = y->rightChild;
+      if (y->parent == z)
+         temp->parent = z;
+      else {
+         rbTransplant(y, y->rightChild);
+         y->rightChild = z->rightChild;
+         y->rightChild->parent = y;
+      }
+      rbTransplant(z, y);
+      y->leftChild = z->leftChild;
+      y->leftChild->parent = y;
+      y->isRed = z->isRed;
+   }
+   delete z;
+   if (!origCol)
+      rbDeleteFixup(temp);
+}
+
+void WeatherData::rbDeleteFixup(WeatherDataNode * x){
+    while (x != root && !x->isRed) {
+      if (x == x->parent->leftChild) {
+         WeatherDataNode *w = x->parent->rightChild;
+         if (w->isRed) {
+            w->isRed = false;
+            x->parent->isRed = true;
+            leftRotate(x->parent);
+            w = x->parent->rightChild;
+         }
+         if (!w->leftChild->isRed && !w->rightChild->isRed) {
+            w->isRed = true;
+            x = x->parent;
+         }
+         else {
+            if (!w->rightChild->isRed) {
+               w->leftChild->isRed = false;
+               w->isRed = true;
+               rightRotate(w);
+               w = x->parent->rightChild;
+            }
+            w->isRed = x->parent->isRed;
+            x->parent->isRed = false;
+          //  w->isRed = x->parent->isRed;
+            w->rightChild->isRed = false;
+            leftRotate(x->parent);
+            x = root;
+         }
+      }
+      else  {
+         WeatherDataNode *w = x->parent->leftChild;
+         if (w->isRed) {
+            w->isRed = false;
+            x->parent->isRed = true;
+            rightRotate(x->parent);
+            w = x->parent->leftChild;
+         }
+         if (!w->rightChild->isRed && !w->leftChild->isRed) {
+            w->isRed = true;
+            x = x->parent;
+         }
+         else {
+            if (!w->leftChild->isRed) {
+               w->rightChild->isRed = false;
+               w->isRed = true;
+               leftRotate(w);
+               w = x->parent->leftChild;
+            }
+            w->isRed = x->parent->isRed;
+            x->parent->isRed = false;
+            w->leftChild->isRed = false;
+            rightRotate(x->parent);
+            x = root;
+         }
+      }
+   }
+   x->isRed = false;
+}
+
+void WeatherData::rbTransplant(WeatherDataNode * u, WeatherDataNode * v){
+    if(u->parent == nil){
+        root = v;
+    }
+
+    else{
+        if(u == u->parent->leftChild){
+            u->parent->leftChild = v;
+        }
+        else{
+            u->parent->rightChild = v;
+            v->parent = u->parent;
+        }
+    }
+}
 
 //WeatherData
