@@ -83,7 +83,7 @@ int main() {
 			ws->printCitiesByName();
 		}
         if (userArg == 8) {
-            cout << "Goodbye!~" << endl;
+            cout << "Goodbye!" << endl;
             break;
         }
         printMenu();
