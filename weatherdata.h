@@ -89,6 +89,7 @@ public:
 
 
 private:
+    WeatherDataNode* searchWeatherData(WeatherDataNode * node, std::string city);
     void DeleteAll(WeatherDataNode * node);
     void rbAddFixup(WeatherDataNode * node);
     void leftRotate(WeatherDataNode * x);
