@@ -11,7 +11,7 @@ struct Atmosphere {
     std::string humidity;
     std::string pressure;
     std::string rising;
-    std::string visibility; 
+    std::string visibility;
 };
 
 struct Forecast {
@@ -21,7 +21,7 @@ struct Forecast {
     std::string high;
     std::string low;
     std::string storm;
-    
+
     Forecast(){
 		next = NULL;
 	};
@@ -51,13 +51,13 @@ struct WeatherDataNode {
     Forecast * fore;
     Location loc;
     WindData wind;
-    
+
     bool isRed;
 
     WeatherDataNode * parent;
     WeatherDataNode * leftChild;
     WeatherDataNode * rightChild;
-    
+
     WeatherDataNode(){
 		fore = NULL;
 		parent = NULL;
@@ -77,7 +77,7 @@ public:
     WeatherData();
     virtual ~WeatherData();
     void addCity(std::string cityInfo);
-    void deleteCity();
+    void deleteCity(std::string city);
     void printCitiesByName();
     void printCitiesByTemp();
     void getSunData(std::string city);
