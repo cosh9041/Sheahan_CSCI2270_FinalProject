@@ -11,7 +11,7 @@ struct Atmosphere {
     std::string humidity;
     std::string pressure;
     std::string rising;
-    std::string visibility;
+    std::string visibility; 
 };
 
 struct Forecast {
@@ -21,7 +21,7 @@ struct Forecast {
     std::string high;
     std::string low;
     std::string storm;
-
+    
     Forecast(){
 		next = NULL;
 	};
@@ -51,13 +51,13 @@ struct WeatherDataNode {
     Forecast * fore;
     Location loc;
     WindData wind;
-
+    
     bool isRed;
 
     WeatherDataNode * parent;
     WeatherDataNode * leftChild;
     WeatherDataNode * rightChild;
-
+    
     WeatherDataNode(){
 		fore = NULL;
 		parent = NULL;
@@ -77,29 +77,30 @@ public:
     WeatherData();
     virtual ~WeatherData();
     void addCity(std::string cityInfo);
-    void deleteCity(std::string city);
+    void deleteCity(std:: string city);
     void printCitiesByName();
-    void printCitiesByTemp();
-    void getSunData(std::string city);
+    void getCurrentWeather(std::string city);
+    void getAstronomyData(std::string city);
     void getAtmosphericData(std::string city);
     void getForecast(std::string city);
     void getWindData(std::string city);
     void getAllWeatherData(std::string city);
-    void getWarmest();
+    void getLocation(std::string city);
+    bool foundCity(std::string name);
 
 
 private:
-    WeatherDataNode* searchWeatherData(WeatherDataNode * node, std::string city);
     void DeleteAll(WeatherDataNode * node);
     void rbAddFixup(WeatherDataNode * node);
     void leftRotate(WeatherDataNode * x);
     void rightRotate(WeatherDataNode * x);
     void rbDelete(WeatherDataNode * z);
-    void rbDeleteFixup(WeatherDataNode * x);
+    void rbDeleteFixup(WeatherDataNode * node);
     void rbTransplant(WeatherDataNode * u, WeatherDataNode * v);
     int rbValid(WeatherDataNode * node);
     void printCitiesByName(WeatherDataNode * node);
     void DeleteForecasts(Forecast * node);
+    WeatherDataNode *searchWeatherTree(WeatherDataNode * node, std::string name);
 
     WeatherDataNode * root;
     WeatherDataNode * nil;

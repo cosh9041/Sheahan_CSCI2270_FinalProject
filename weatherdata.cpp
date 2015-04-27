@@ -35,6 +35,26 @@ void WeatherData::DeleteForecasts(Forecast * node) {
 	delete node;
 }
 
+bool WeatherData::foundCity(string name) {
+	if (searchWeatherTree(root, name) != nil)
+		return true;
+	return false;
+}
+
+WeatherDataNode* WeatherData::searchWeatherTree(WeatherDataNode * node, string name) {
+   if (node == nil)
+       return nil;
+   else if (node->loc.cityName == name)
+       return node;
+   else {
+      if(name.compare(node->loc.cityName) < 0)
+         return searchWeatherTree(node->leftChild,name);
+      else
+         return searchWeatherTree(node->rightChild,name);
+   }
+}
+
+
 void WeatherData::addCity(string cityInfo) {
 	WeatherDataNode * newCity = new WeatherDataNode();
 	newCity->parent = nil;
@@ -143,7 +163,7 @@ void WeatherData::addCity(string cityInfo) {
 
 	//Put weather data into tree by cityname.
 	WeatherDataNode * x = root;
-
+	
     if (root == nil) {
         root = newCity;
         root->isRed = false;
@@ -173,6 +193,7 @@ void WeatherData::addCity(string cityInfo) {
     rbAddFixup(newCity);
     return;
 }
+
 
 
 void WeatherData::rbAddFixup(WeatherDataNode * node) {
@@ -265,35 +286,72 @@ void WeatherData::printCitiesByName(WeatherDataNode * node) {
    return;
 }
 
-void WeatherData::getAllWeatherData(string city) {
-	
-	
+void WeatherData::getAstronomyData(string city) {
+	WeatherDataNode * x = searchWeatherTree(root, city);
+	cout << "The Sunrise for today is at " << x->sunData.sunrise << "." << endl;
+	cout << "The sunset for today is at " << x->sunData.sunset << "." << endl;
 }
 
-WeatherDataNode* WeatherData::searchWeatherData(WeatherDataNode * node, string city) {
-   if(node == nil){
-       return nil;
-   }
-   else{
-        if(node->loc.cityName == city){
-            return node;
-        }
-        else{
-            if(city.compare(node->loc.cityName) < 0){
-                return searchWeatherData(node->leftChild,city);
-            }
-            else{
-                return searchWeatherData(node->rightChild,city);
-            }
-        }
-    }
+void WeatherData::getAtmosphericData(string city) {
+	WeatherDataNode * x = searchWeatherTree(root, city);
+	cout << "The humidity right now is " << x->atmosData.humidity << "." << endl;
+	cout << "The atmospheric pressure right now is " << x->atmosData.pressure << "." << endl;
+	cout << "The visibility right now is " << x->atmosData.visibility << "." << endl;
+}
+
+void WeatherData::getForecast(string city) {
+	WeatherDataNode * x = searchWeatherTree(root, city);
+	Forecast * temp = x->fore;
+	cout << "5 Day Forecast for " << x->loc.cityName << ", " << x->loc.region << ":" << endl;
+	while (temp) {
+		cout << "_____" + temp->day + ", " + temp->date + "_____" << endl;
+		cout << "High: " << temp->high << endl;
+		cout << "Low: " << temp->low << endl;
+		cout << temp->storm << endl << endl;
+		temp = temp->next;
+	}
+}
+
+void WeatherData::getWindData(string city) {
+	WeatherDataNode * x = searchWeatherTree(root, city);
+	cout << "Chill Factor: " << x->wind.chill << endl;
+	cout << "Direction: " << x->wind.direction << endl;
+	cout << "Speed: " << x->wind.speed << endl;
+}
+
+void WeatherData::getLocation(string city) {
+	WeatherDataNode * x = searchWeatherTree(root, city);
+	cout << x->loc.cityName << ", " << x->loc.region << endl;
+	cout << x->loc.country << endl;
+	cout << "Latitude: " << x->loc.lat << endl;
+	cout << "Longitude: " << x->loc.lon << endl;
+}
+
+void WeatherData::getCurrentWeather(string city) {
+	WeatherDataNode * x = searchWeatherTree(root, city);
+	cout << "As of " + x->timeOfQuery + ":" << endl;
+	cout <<"Temperature: " << x->currTemp << endl;
+	cout << x->currWeather << endl;
+}
+	
+void WeatherData::getAllWeatherData(string city) {
+	WeatherDataNode * x = searchWeatherTree(root, city);
+	cout << "Information for " << x->loc.cityName << ", " << x->loc.region << ":" << endl;
+	getCurrentWeather(city);
+	cout << "Location Information:" << endl;
+	getLocation(city);
+	getForecast(city);
+	getAstronomyData(city);
+	getAtmosphericData(city);
+	getWindData(city);
+	
 }
 
 void WeatherData::deleteCity(string city){
-   WeatherDataNode *found = searchWeatherData(root, city);
+   WeatherDataNode *found = searchWeatherTree(root, city);
 
    if (found == nil)
-      cout << "movie not found" << endl;
+      cout << "That city is not in the network!" << endl;
    else {
       rbDelete(found);
    }
@@ -390,7 +448,7 @@ void WeatherData::rbDeleteFixup(WeatherDataNode * x){
             x = root;
          }
       }
-   }
+  }
    x->isRed = false;
 }
 
