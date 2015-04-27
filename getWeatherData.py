@@ -9,11 +9,8 @@ gabriel.walker@colorado.edu
 
 #Example calls:
 
-'''To get the pressure in boulder'''
-#C:\Users\Gabriel\Documents\School Spring 2015\Data Structures> & '.\test_script.py' boulder atmosphere.pressure
-
-'''To get everything about Aurora Colorado'''
-#C:\Users\Gabriel\Documents\School Spring 2015\Data Structures> & '.\test_script.py' boulder atmosphere.pressure
+'''To get information about boulder'''
+#C:\Users\Gabriel\Documents\School Spring 2015\Data Structures> & '.\test_script.py' boulder
 
 
 #urllib.request is the library that allows us to get information from a website
@@ -32,8 +29,6 @@ baseurl = "https://query.yahooapis.com/v1/public/yql?"
 
 #Our (inconplete) query which tells the website that we want the temperature object from the city that was inputed
 temp_query = 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="")'
-
-#item.condition.temp
 
 #Find where the city name will be inserted
 index = temp_query.find('")')
