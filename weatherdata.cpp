@@ -346,20 +346,34 @@ void WeatherData::getAllWeatherData(string city) {
 	getWindData(city);
 	
 }
-
+/*
+Prototype: void deleteCity(string)
+Description: This is the function that gets called from the main menu.
+             If the city entered has not been loaded the user is told so, otherwise this function calls the rbDelete function.
+Example call: deleteCity(Istanbul)
+Pre-conditions: The city entered must be a string
+Post-conditions: If the city is found, it is deleted from the tree and the tree is then changed accordingly to preserve red-black properties
+*/
 void WeatherData::deleteCity(string city){
    WeatherDataNode *found = searchWeatherTree(root, city);
 
    if (found == nil)
-      cout << "That city is not in the network!" << endl;
+      cout << "That city has is not loaded" << endl;
    else {
       rbDelete(found);
    }
 }
-
+/*
+Prototype: void rbDeletey(WeatherDataNode *)
+Description: This is the function that gets called by deleteCity
+             It deletes the node entered and uses rbTransplant and rbDeleteFixup to preserve the red-black properties of the tree
+Example call: rbDelete(deleteThisCity)
+Pre-conditions: Must be passed a pointer to a city that is already in the tree
+Post-conditions: Deletes the node from the tree and the tree is then changed accordingly to preserve red-black properties
+*/
 void WeatherData::rbDelete(WeatherDataNode * z){
    WeatherDataNode *y = z;
-   bool origCol = y->isRed;
+   bool origCol = y->isRed;//original color of the node
    WeatherDataNode *temp;
    if (z->leftChild == nil) {
       temp = z->rightChild;
@@ -392,7 +406,13 @@ void WeatherData::rbDelete(WeatherDataNode * z){
    if (!origCol)
       rbDeleteFixup(temp);
 }
-
+/*
+Prototype: void rbDeleteFixup(WeatherDataNode *)
+Description: This function gets called if the tree has a red-black violation after the node is deleted
+Example call: rbDeleteFixup(rightChild)
+Pre-conditions: The tree has a red-black violation after a node is deleted
+Post-conditions: The tree's red-black properties are restored
+*/
 void WeatherData::rbDeleteFixup(WeatherDataNode * x){
     while (x != root && !x->isRed) {
       if (x == x->parent->leftChild) {
@@ -451,7 +471,13 @@ void WeatherData::rbDeleteFixup(WeatherDataNode * x){
   }
    x->isRed = false;
 }
-
+/*
+Prototype: void rbTransplant(WeatherDataNode *,WeatherDataNode *)
+Description: This function gets called if a parent node and it's child need to be swapped
+Example call: rbTransplant(parentNode, parentNode->leftChild)
+Pre-conditions: Parent node and one of it's child nodes need to be swapped to preserve the tree's binary and/or red-black properties
+Post-conditions: The tree's binary and/or red-black properties are restored
+*/
 void WeatherData::rbTransplant(WeatherDataNode * u, WeatherDataNode * v){
     if(u->parent == nil){
         root = v;
