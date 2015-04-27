@@ -5,6 +5,7 @@
 
 using namespace std;
 
+/* Main menu */
 void printMainMenu() {
     cout << "====Main Menu====" << endl;
     cout << "1. Add city" << endl;
@@ -15,6 +16,7 @@ void printMainMenu() {
     cout << "6. Quit" << endl;
 }
 
+/* Weather menu */
 void printWeatherMenu() {
 	cout << "====Weather Options====" << endl;
 	cout << "1. Astronomy data" << endl;
@@ -26,17 +28,22 @@ void printWeatherMenu() {
 	cout << "7. Back to main menu" << endl;
 }
 
+/* Calls addCity in class WeatherData to add city to the database */
 void inputCity(string city, WeatherData * wData) {
     //Set command argument to pass to system command line to call python file that gets weather data.
     string filename = "./getWeatherData.py";
     string baseCommand = "python3.4 ";
     baseCommand += filename;
-
+	
+	//Call Python file to get weather data.
     string command = baseCommand + " " + "\"" + city + "\"";
     system(command.c_str());
+    
+    //Read output file.
     ifstream fileReader;
     fileReader.open((city + ".txt").c_str());
 
+	//Put city into weatherdata database.
     string temp;
     string cityInfo;
     while(getline(fileReader, temp)) {
@@ -49,6 +56,7 @@ void inputCity(string city, WeatherData * wData) {
 		
 }
 
+/* Called when use selects detailed weather options. */
 void weatherOptions(WeatherData * wData) {
 	cout << "Which city do you want information about?" << endl;
 	//cin.ignore();

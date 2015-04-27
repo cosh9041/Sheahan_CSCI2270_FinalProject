@@ -6,6 +6,8 @@
 
 using namespace std;
 
+
+/* WeatherData class constructor */
 WeatherData::WeatherData() {
     nil = new WeatherDataNode();
     root = nil;
@@ -14,10 +16,18 @@ WeatherData::WeatherData() {
     root->rightChild = nil;
 }
 
+/* WeatherData class destructor */
 WeatherData::~WeatherData(){
 	DeleteAll(root);
 }
 
+/* void DeleteAll(WeatherDataNode);
+ * 	Description: Deletes all elements of the WeatherData class. Only called
+ * 	by the destructor. Private method.
+ * 
+ * 	Pre-conditions: None
+ * 	Post-Condition: The WeatherData class instance will be empty.
+ */
 void WeatherData::DeleteAll(WeatherDataNode * node) {
 	if (node) {
 		DeleteForecasts(node->fore);
@@ -29,18 +39,39 @@ void WeatherData::DeleteAll(WeatherDataNode * node) {
     delete node;
 }
 
+/* void DeleteForecasts(Forecast);
+ * 	Description: Deletes all elements of a forecast data type. Private method.
+ * 
+ * 	Pre-condition: None
+ * 	Post-condition: All forecast data encapsulated in a WeatherDataNode are
+ *  	deleted.
+ */
 void WeatherData::DeleteForecasts(Forecast * node) {
 	if (node->next) 
 		DeleteForecasts(node->next);
 	delete node;
 }
 
+/* bool foundCity(string name)
+ * 	Description: Finds an instance of 'name' in the WeatherData class instance.
+ * 		Returns true if found, false if not found. Case-sensitive. Public method.
+ * 
+ * 	Pre-condition: None
+ * 	Post-condition: None
+ */
 bool WeatherData::foundCity(string name) {
 	if (searchWeatherTree(root, name) != nil)
 		return true;
 	return false;
 }
 
+/* WeatherDataNode * searchWeatherTree(WeatherDataNode * node, string name);
+ * 	Description: Searches the WeatherData class for an instance of 'name' starting at 
+ * 		root 'node'. Private method. If found, returns the node instance. If not, returns nil.
+ * 	
+ * 	Pre-condition: None
+ * 	Post-condition: None
+ */
 WeatherDataNode* WeatherData::searchWeatherTree(WeatherDataNode * node, string name) {
    if (node == nil)
        return nil;
@@ -54,7 +85,15 @@ WeatherDataNode* WeatherData::searchWeatherTree(WeatherDataNode * node, string n
    }
 }
 
-
+/* void addCity(string cityInfo);
+ * 	Description: Adds a new city to the network based on the information given by 
+ * 		'cityInfo'. Public method.
+ * 
+ * 	Pre-condition: cityInfo must be a string formatted from a json Yahoo! Weather API
+ * 		query. 
+ * 	Post-conditino: A new WeatherDataNode will be created and added to the tree database in the 
+ * 		appropriate location.
+ */
 void WeatherData::addCity(string cityInfo) {
 	WeatherDataNode * newCity = new WeatherDataNode();
 	newCity->parent = nil;
@@ -194,8 +233,13 @@ void WeatherData::addCity(string cityInfo) {
     return;
 }
 
-
-
+/* void rbAddFixup(WeatherDataNode * node);
+ * 	Description: Private method called by addCity method. Ensures the 
+ * 		balanced structure of the database.
+ * 
+ * 	Pre-condition: 'node' must be the new node added to the tree.
+ * 	Post-conditino: The tree regains balance.
+ */
 void WeatherData::rbAddFixup(WeatherDataNode * node) {
    while (node != root && node->parent->isRed) {
       if (node->parent == node->parent->parent->leftChild) {
@@ -238,7 +282,13 @@ void WeatherData::rbAddFixup(WeatherDataNode * node) {
    root->isRed = false;
 }
 
-
+/* void leftRotate(WeatherDataNode * node);
+ * 	Description: Performs a left rotation about 'node'. Private method.
+ * 
+ * 	Pre-condition: 'node' is the appropriate node to performa a left rotatation
+ * 		about.
+ * 	Post-condition: The tree is rotated left about 'node'.
+ */
 void WeatherData::leftRotate(WeatherDataNode *node) {
     WeatherDataNode *x = node->rightChild;
     node->rightChild = x->leftChild;
@@ -254,6 +304,13 @@ void WeatherData::leftRotate(WeatherDataNode *node) {
     x->leftChild = node;
 }
 
+/* void rightRotate(WeatherDataNode * node);
+ * 	Description: Performs a right rotation about 'node'. Private method.
+ * 
+ * 	Pre-condition: 'node' is the appropriate node to performa a right rotatation
+ * 		about.
+ * 	Post-condition: The tree is rotated right about 'node'.
+ */
 void WeatherData::rightRotate(WeatherDataNode *node) {
     WeatherDataNode *x = node->leftChild;
     node->leftChild = x->rightChild;
@@ -269,12 +326,23 @@ void WeatherData::rightRotate(WeatherDataNode *node) {
     x->rightChild = node;
 }
 
-
+/* void printCitiesByName();
+ * 	Description: Public method to print all city names in alphabetical order.
+ * 
+ * 	Pre-condition: None.
+ *	Post-condition: All city names will be printed to the command terminal window.
+ */
 void WeatherData::printCitiesByName() {
    printCitiesByName(root);
 }
 
-/* Prints the inventory(in order traversal) */
+/* void printCitiesByName(WeatherDataNode * node);
+ * 	Description: Private method called by printCitiesByName() that prints each city in the
+ * 		database in alphabetical order.
+ * 		
+ *	Pre-condition: 'node' must be the root of the tree.
+ * 	Post-condition: All city names will be printed to the command terminal window.
+ */
 void WeatherData::printCitiesByName(WeatherDataNode * node) {
    if(node->leftChild != nil)
        printCitiesByName(node->leftChild);
@@ -286,12 +354,27 @@ void WeatherData::printCitiesByName(WeatherDataNode * node) {
    return;
 }
 
+/* void getAstronomyData(string city);
+ * 	Description: Prints sunrise and sunset times to the command window. Public method.
+ * 
+ * 	Pre-condition: City must be a city name currently in the database. The start of 
+ * 		each word in the name must be capitalized and the rest lower-case.
+ * 	Post-condition: Sunrise and sunset times are printed to the command window.
+ */
 void WeatherData::getAstronomyData(string city) {
 	WeatherDataNode * x = searchWeatherTree(root, city);
 	cout << "The Sunrise for today is at " << x->sunData.sunrise << "." << endl;
 	cout << "The sunset for today is at " << x->sunData.sunset << "." << endl;
 }
 
+/* void getAtmosphericData(string city);
+ * 	Description: Prints atmospheric data about 'city' to the command window. 
+ * 		Public method.
+ * 
+ * 	Pre-condition: City must be a city name currently in the database. The start of 
+ * 		each word in the name must be capitalized and the rest lower-case.
+ * 	Post-condition: Astronomy data is printed to the command window.
+ */
 void WeatherData::getAtmosphericData(string city) {
 	WeatherDataNode * x = searchWeatherTree(root, city);
 	cout << "The humidity right now is " << x->atmosData.humidity << "." << endl;
@@ -299,6 +382,14 @@ void WeatherData::getAtmosphericData(string city) {
 	cout << "The visibility right now is " << x->atmosData.visibility << "." << endl;
 }
 
+/* void getForecast(string city);
+ * 	Description: Prints 5-day forecast to command window for city name 'city'.
+ * 		Public method.
+ * 
+ * 	Pre-condition: City must be a city name currently in the database. The start of 
+ * 		each word in the name must be capitalized and the rest lower-case.
+ *  Post-condition: Printcs forecast to command window.
+ */
 void WeatherData::getForecast(string city) {
 	WeatherDataNode * x = searchWeatherTree(root, city);
 	Forecast * temp = x->fore;
@@ -312,6 +403,14 @@ void WeatherData::getForecast(string city) {
 	}
 }
 
+/* void getWindData(string city);
+ * 	Description: Prints wind data to command window for city name 'city'.
+ * 		Public method.
+ * 
+ * 	Pre-condition: City must be a city name currently in the database. The start of 
+ * 		each word in the name must be capitalized and the rest lower-case.
+ *  Post-condition: Prints wind data to command window.
+ */
 void WeatherData::getWindData(string city) {
 	WeatherDataNode * x = searchWeatherTree(root, city);
 	cout << "Chill Factor: " << x->wind.chill << endl;
@@ -319,6 +418,14 @@ void WeatherData::getWindData(string city) {
 	cout << "Speed: " << x->wind.speed << endl;
 }
 
+/* void getLocation(string city);
+ * 	Description: Prints location data to command window to city name 'city'.
+ * 		Public method.
+ * 
+ * 	Pre-condition: City must be a city name currently in the database. The start of 
+ * 		each word in the name must be capitalized and the rest lower-case.
+ * 	Post-conidition: Prints location data to command window.
+ */
 void WeatherData::getLocation(string city) {
 	WeatherDataNode * x = searchWeatherTree(root, city);
 	cout << x->loc.cityName << ", " << x->loc.region << endl;
@@ -327,13 +434,29 @@ void WeatherData::getLocation(string city) {
 	cout << "Longitude: " << x->loc.lon << endl;
 }
 
+/* void getCurrentWeather(string city);
+ * 	Description: Prints current weather information to command window for city name 'city'.
+ * 		Public method.
+ * 
+ * 	Pre-condition: City must be a city name currently in the database. The start of 
+ * 		each word in the name must be capitalized and the rest lower-case.
+ * 	Post-condition: Prints weather information to command window.
+ */
 void WeatherData::getCurrentWeather(string city) {
 	WeatherDataNode * x = searchWeatherTree(root, city);
 	cout << "As of " + x->timeOfQuery + ":" << endl;
 	cout <<"Temperature: " << x->currTemp << endl;
 	cout << x->currWeather << endl;
 }
-	
+
+/* void getAllWeatherData(string city);
+ * 	Description: Prints all weather data available to command window for city name 'city'.
+ * 		Public method.
+ * 
+ * 	Pre-condition: City must be a city name currently in the database. The start of 
+ * 		each word in the name must be capitalized and the rest lower-case.
+ * 	Post-condition: Prints all current weather data to command line.
+ */
 void WeatherData::getAllWeatherData(string city) {
 	WeatherDataNode * x = searchWeatherTree(root, city);
 	cout << "Information for " << x->loc.cityName << ", " << x->loc.region << ":" << endl;
