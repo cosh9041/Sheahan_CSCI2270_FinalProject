@@ -33,4 +33,4 @@ Open issues/bugs:
 Would like to offer support for different operating systems. At this point, the code is dependent upon
 the structure of the file system used in Linux and is not compatible with any other operating system.
 
-No known bugs at this time.
+Won't get information for different cities with the same name. Example: Aurora IL and Aurora CO
