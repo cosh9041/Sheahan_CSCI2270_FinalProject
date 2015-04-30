@@ -526,8 +526,8 @@ void WeatherData::rbDelete(WeatherDataNode * z){
       y->isRed = z->isRed;
    }
    delete z;
-   if (!origCol)
-      rbDeleteFixup(temp);
+   //if (!origCol)
+     // rbDeleteFixup(temp);
 }
 /*
 Prototype: void rbDeleteFixup(WeatherDataNode *)
